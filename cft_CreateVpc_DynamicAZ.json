@@ -1,0 +1,130 @@
+{
+
+    "AWSTemplateFormatVersion" : "2010-09-09",
+    "Description": "I am creating a VPC with a LoadBalancer and a AutoScalingGroup ",
+    "Parameters": {
+        "WebServerKey": {   
+            "Description": "Parameterized Key will be used to SSH into EC2 instances",
+            "Type":"AWS::EC2::KeyPair::KeyName"
+}
+    }, 
+
+"Resources":{
+    "VPC":{
+            "Type" : "AWS::EC2::VPC",
+            "Properties" : {
+                "CidrBlock" : "10.0.0.0/16",
+                "EnableDnsHostnames" : true,
+                "EnableDnsSupport" : false,
+                "InstanceTenancy" : "default",
+                "Tags" : [
+
+                    {
+                        "Key":"Name",
+                        "Value":"VpcCreatedByCFT"
+
+                    }
+                 ]
+              }
+          },
+
+          "PublicSubnet1":{
+            "Type" : "AWS::EC2::Subnet",
+            "Properties" : {
+                "AvailabilityZone" : {
+                    "Fn::Select": [
+                        "0",
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "CidrBlock" :"10.0.1.0/28" ,
+                "MapPublicIpOnLaunch" : true ,
+                "Tags" : [ 
+                    {
+                        "Key":"Name",
+                        "Value":"DMZ1Public"
+                    }
+                 ],
+                "VpcId" : {"Ref":"VPC"}
+              }
+          },
+
+          "PublicSubnet2":{
+            "Type" : "AWS::EC2::Subnet",
+            "Properties" : {
+                "AvailabilityZone" : {
+                    "Fn::Select" : [ 
+                      "1", 
+                      { 
+                        "Fn::GetAZs" : "" 
+                      } 
+                    ]
+                  } ,
+                "CidrBlock" :"10.0.2.0/28" ,
+                "MapPublicIpOnLaunch" : true ,
+                "Tags" : [ 
+                    {
+                        "Key":"Name",
+                        "Value":"DMZ2Public"
+                    }
+                 ],
+                "VpcId" : {"Ref":"VPC"}
+              }
+          },
+
+          "PrivateSubnet1":{
+            "Type" : "AWS::EC2::Subnet",
+            "Properties" : {
+                "AvailabilityZone" : {
+                    "Fn::Select": [
+                        "0",
+                        {
+                            "Fn::GetAZs": ""
+                        }
+                    ]
+                },
+                "CidrBlock" :"10.0.3.0/28" ,
+                "MapPublicIpOnLaunch" : false ,
+                "Tags" : [ 
+                    {
+                        "Key":"Name",
+                        "Value":"AppLayer1private"
+                    }
+                 ],
+                "VpcId" : {"Ref":"VPC"}
+              }
+          },
+
+          "PrivateSubnet2":{
+            "Type" : "AWS::EC2::Subnet",
+            "Properties" : {
+                "AvailabilityZone" : {
+                    "Fn::Select" : [ 
+                      "1", 
+                      { 
+                        "Fn::GetAZs" : "" 
+                      } 
+                    ]
+                  } ,
+                "CidrBlock" :"10.0.4.0/28" ,
+                "MapPublicIpOnLaunch" : false ,
+                "Tags" : [ 
+                    {
+                        "Key":"Name",
+                        "Value":"AppLayer2private"
+                    }
+                 ],
+                "VpcId" : {"Ref":"VPC"}
+              }
+          }
+          
+          
+
+} 
+
+    
+
+}
+
