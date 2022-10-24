@@ -1,5 +1,7 @@
 1)AwsTemplateFormatVersion --> THIS IS A STANDARD KEY --> Google it paste it --> Organize it if you need to do.
+
 2)Under AwsTemplateFormatVersion which is into json format put the "Description": -->This is optional. It gives info what you are doing
+
 3)Now, it is time to use your keyPair(.pem file) We will parameterized it!
  We use "Parameters": {
         "WebServerKey": {   --> this is a logical ID!
