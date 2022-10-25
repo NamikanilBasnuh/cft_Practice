@@ -1,5 +1,7 @@
 1)AwsTemplateFormatVersion --> THIS IS A STANDARD KEY --> Google it paste it --> Organize it if you need to do.
+
 2)Under AwsTemplateFormatVersion which is into json format put the "Description": -->This is optional. It gives info what you are doing
+
 3)Now, it is time to use your keyPair(.pem file) We will parameterized it!
  We use "Parameters": {
         "WebServerKey": {   --> this is a logical ID!
@@ -88,6 +90,7 @@ Link->https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-f
 
  9- Vpc and public subnets are done. Now I am creating 2 private subnets!   
    Private subnets --> "MapPublicIpOnLaunch" : false  MUST BE FALSE!!!!!
+<<<<<<< HEAD
 
 10- Create "InternetGateway" and "InternetGatewayAttachment" --> makes VPC and internetGateway attach each other!
 
@@ -115,3 +118,5 @@ link:link:https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-res
       "Domain" : "vpc"
    }
 }                                      
+=======
+>>>>>>> fd43f44076d246b3e4abc9956863677cff975f3a
