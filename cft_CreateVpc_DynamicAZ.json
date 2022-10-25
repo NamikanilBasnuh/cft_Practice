@@ -118,13 +118,96 @@
                  ],
                 "VpcId" : {"Ref":"VPC"}
               }
-          }
-          
-          
+          },
 
-} 
+          "InternetGateway" : {
+            "Type" : "AWS::EC2::InternetGateway",
+            "Properties" : {
+              "Tags" : [ {"Key" : "Name", "Value" : "IGcreatedByCFT"}]
+            }
+         },
+
+         "InternetGatewayAttachment" : {
+            "Type" : "AWS::EC2::VPCGatewayAttachment",
+            "Properties" : {
+               "VpcId" : { "Ref" : "VPC" },
+               "InternetGatewayId" : { "Ref" : "InternetGateway" }
+             }
+         },
+
+         "PublicRouteTable"{
+            "Type" : "AWS::EC2::RouteTable",
+            "Properties" : {
+                "Tags" : [ {"Key" : "Name", "Value" : "PublicRT"}],
+            "VpcId" : {"Ref":"VPC"}
+               }
+          },
+
+          "PublicRouteConfiguration":{
+            "Type" : "AWS::EC2::Route",
+            "Properties" : {
+                "DependsOn":"InternetGatewayAttachment",
+                "GatewayId" : {"Ref":"InternetGateway"},
+                "RouteTableId" : {"Ref":"PublicRouteTable"},
+                "DestinationIpv6CidrBlock" :"0.0.0.0/0"
+              }
+          },
+
+          "PublicSubnet1RouteTableAssociation" : {
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+               "SubnetId" : { "Ref" : "PublicSubnet1" },
+               "RouteTableId" : { "Ref" : "PublicRouteTable" }
+            }
+         },
+
+         "PublicSubnet2RouteTableAssociation" :{
+            "Type" : "AWS::EC2::SubnetRouteTableAssociation",
+            "Properties" : {
+               "SubnetId" : { "Ref" : "PublicSubnet2" },
+               "RouteTableId" : { "Ref" : "PublicRouteTable" }
+            }
+
+         },
+
+         "Public2NATGateway" : {
+            
+                "Type" : "AWS::EC2::NatGateway",
+                "Properties" : {
+                    "AllocationId" : { "Fn::GetAtt": ["NatElasticIP","AllocationId"]},
+                    "ConnectivityType" : "Public",
+                    "SubnetId" :"PublicSubnet2" ,
+                    "Tags" : [ {
+                                "Key":"Name", 
+                                "Value":"CftNat-Gateway" 
+                            }
+                            ]
+                  }
+              },
+
+              "NatElasticIP":{
+
+                "Type" : "AWS::EC2::EIP",
+            "DependsOn": "InternetGatewayAttachment",
+            "Properties" : {
+                "Domain" : "vpc",
+                "Tags" : [
+                    {
+                        "Key": "Name",
+                        "Value": "Elastic-IP"
+                    }
+                ]
+
+
+              }
+              
+         }
+
+    }  
+
+}
 
     
 
-}
+
 

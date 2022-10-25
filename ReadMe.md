@@ -88,3 +88,30 @@ Link->https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/intrinsic-f
 
  9- Vpc and public subnets are done. Now I am creating 2 private subnets!   
    Private subnets --> "MapPublicIpOnLaunch" : false  MUST BE FALSE!!!!!
+
+10- Create "InternetGateway" and "InternetGatewayAttachment" --> makes VPC and internetGateway attach each other!
+
+11- Route table -> https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-routetable.html
+
+12-Route table configuration->https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-route.html
+
+PublicRouteConfiguration" -->"DependsOn":"InternetGatewayAttachment" it makes ->Wait until internetGateway created!
+
+13-Now, It is time to Associations --> You must associate your subnets to your Route Table!!!!
+Link:https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-subnetroutetableassociation.html
+    2 public subnets' associations are done ->"PublicSubnet1RouteTableAssociation"
+                                              "PublicSubnet2RouteTableAssociation"
+
+
+14-Now, According to the diagram, create a NatGateway
+link:link:https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-ec2-natgateway.html
+
+ "AllocationId" : { "Fn::GetAtt": ["NatElasticIP","AllocationId"]}, -> will explain later
+
+15-Now, Create an elastic IP Because your NatGateway is Public ->You must Allocate an elastic IP!! You were doing the same thing on Amazon UI too!!!!!     
+"NATGatewayEIP" : {
+   "Type" : "AWS::EC2::EIP",
+   "Properties" : {
+      "Domain" : "vpc"
+   }
+}                                      
